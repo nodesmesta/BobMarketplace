@@ -33,12 +33,30 @@ async function init() {
     }
   }
 
-  const projectRoot = path.resolve(__dirname, "../../..");
-  const mcpServerBundle = path.join(projectRoot, "packages/mcp-server/dist/index.js");
+  const bobMarketplaceDir = path.join(homeDir, ".bob", "marketplace");
+  if (!fs.existsSync(bobMarketplaceDir)) {
+    fs.mkdirSync(bobMarketplaceDir, { recursive: true });
+    console.log(`[+] Created directory: ${bobMarketplaceDir}`);
+  }
+
+  // Determine source MCP server bundle (packaged or dev fallback)
+  const localBundle = path.join(__dirname, "../server/index.js");
+  const devBundle = path.resolve(__dirname, "../../../packages/mcp-server/dist/index.js");
+  const targetServerBundle = path.join(bobMarketplaceDir, "server.js");
+
+  if (fs.existsSync(localBundle)) {
+    fs.copyFileSync(localBundle, targetServerBundle);
+    console.log(`[+] Installed MCP server runtime to: ${targetServerBundle}`);
+  } else if (fs.existsSync(devBundle)) {
+    fs.copyFileSync(devBundle, targetServerBundle);
+    console.log(`[+] Installed MCP server runtime (from dev) to: ${targetServerBundle}`);
+  } else {
+    throw new Error(`MCP server bundle not found at ${localBundle} or ${devBundle}`);
+  }
 
   mcpConfig.mcpServers["marketplace"] = {
     command: "node",
-    args: [mcpServerBundle],
+    args: [targetServerBundle],
     env: {
       BOB_MARKETPLACE_URL: "https://loykzqjybsvuiflhosoe.supabase.co/storage/v1/object/public/packages-bundle"
     },
@@ -47,7 +65,7 @@ async function init() {
   };
 
   fs.writeFileSync(mcpConfigPath, JSON.stringify(mcpConfig, null, 2), "utf-8");
-  console.log("    [OK] Server 'marketplace' registered in mcp.json (direct node runtime)");
+  console.log("    [OK] Server 'marketplace' registered in mcp.json");
 
   // 2. Update ~/.bob/settings/custom_modes.yaml
   console.log("[*] Configuring Global Custom Mode (~/.bob/settings/custom_modes.yaml)...");

@@ -6,6 +6,14 @@
   "bin": {
     "bob-marketplace": "./bin/bob-marketplace.js"
   },
+  "files": [
+    "bin",
+    "server",
+    "README.md"
+  ],
+  "scripts": {
+    "prepack": "node -e \"const fs=require('fs'); fs.mkdirSync('server', {recursive:true}); fs.copyFileSync('../mcp-server/dist/index.js', 'server/index.js');\""
+  },
   "keywords": [
     "ibm-bob",
     "marketplace",
@@ -14,6 +22,12 @@
   ],
   "author": "nodesemesta",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodesmesta/BobMarketplace.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://ibmbob.vercel.app",
   "dependencies": {
     "yaml": "^2.7.0"
   }

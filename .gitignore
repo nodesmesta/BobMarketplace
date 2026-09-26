@@ -13,6 +13,8 @@ node_modules/
 out/
 dist/
 build/
+packages/cli/server/
+*.tsbuildinfo
 
 # Testing & Local Runtime Sessions
 bob_sessions/
