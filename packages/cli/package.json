@@ -4,7 +4,7 @@
   "description": "Zero-friction CLI and Package Manager for IBM Bob 2.0 AI extensions",
   "main": "bin/bob-marketplace.js",
   "bin": {
-    "bob-marketplace": "./bin/bob-marketplace.js"
+    "bob-marketplace": "bin/bob-marketplace.js"
   },
   "files": [
     "bin",
@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodesmesta/BobMarketplace.git",
+    "url": "git+https://github.com/nodesmesta/BobMarketplace.git",
     "directory": "packages/cli"
   },
   "homepage": "https://ibmbob.vercel.app",
