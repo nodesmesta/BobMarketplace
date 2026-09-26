@@ -1,21 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { supabaseAdmin } from "@/lib/supabase/supabaseAdmin";
+import { parseGithubUrl } from "@/lib/github/parseGithubUrl";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-function parseGithubUrl(repoUrl: string): { owner: string; repo: string } | null {
-  try {
-    const parsed = new URL(repoUrl);
-    if (!parsed.hostname.includes("github.com")) return null;
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    if (parts.length < 2) return null;
-    return { owner: parts[0], repo: parts[1].replace(/\.git$/, "") };
-  } catch {
-    return null;
-  }
-}
 
 export async function GET(
   request: NextRequest,
@@ -125,7 +114,7 @@ export async function GET(
     let openIssuesCount = 0;
 
     if (ghParsed) {
-      const { owner, repo } = ghParsed;
+      const { owner, repo, subPath } = ghParsed;
       const ghHeaders: Record<string, string> = {
         "User-Agent": "Bob-Marketplace-Registry-Gateway",
         Accept: "application/vnd.github.v3+json",
@@ -135,10 +124,16 @@ export async function GET(
         ghHeaders["Authorization"] = `token ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`;
       }
 
+      // Build the path to bob-package.json relative to the repo root.
+      // If the package lives in a subdirectory, prepend the subPath.
+      const manifestFilePath = subPath
+        ? `${subPath}/bob-package.json`
+        : "bob-package.json";
+
       // 5a. Fetch live bob-package.json from GitHub
       try {
         const manifestRes = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/contents/bob-package.json`,
+          `https://api.github.com/repos/${owner}/${repo}/contents/${manifestFilePath}`,
           { headers: ghHeaders, next: { revalidate: 0 } }
         );
 
@@ -151,8 +146,11 @@ export async function GET(
           }
         } else {
           // Fallback to raw GitHub user content
+          const rawManifestPath = subPath
+            ? `${subPath}/bob-package.json`
+            : "bob-package.json";
           const rawRes = await fetch(
-            `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/bob-package.json`,
+            `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${rawManifestPath}`,
             { next: { revalidate: 0 } }
           );
           if (rawRes.ok) {

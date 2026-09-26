@@ -24,18 +24,8 @@ import {
   IconShieldCheck,
 } from "@tabler/icons-react";
 import { supabase } from "@/lib/supabase/supabaseClient";
+import { parseGithubUrl } from "@/lib/github/parseGithubUrl";
 import type { User } from "@supabase/supabase-js";
-
-function parseGithubOwner(url: string): string | null {
-  try {
-    const parsed = new URL(url);
-    if (!parsed.hostname.includes("github.com")) return null;
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    return parts[0] || null;
-  } catch {
-    return null;
-  }
-}
 
 export default function PublishPage() {
   const router = useRouter();
@@ -116,8 +106,9 @@ export default function PublishPage() {
   const avatarUrl =
     user.user_metadata?.avatar_url || `https://github.com/${authenticatedUsername}.png`;
 
-  // Ownership verification check on client side
-  const repoOwner = parseGithubOwner(repoUrl);
+  // Ownership verification check on client side using shared generic parser
+  const parsedRepo = parseGithubUrl(repoUrl);
+  const repoOwner = parsedRepo?.owner ?? null;
   const isOwnershipMismatch =
     Boolean(repoUrl && repoOwner && repoOwner.toLowerCase() !== authenticatedUsername.toLowerCase());
 
@@ -201,7 +192,7 @@ export default function PublishPage() {
               <span>Repository Details</span>
             </h2>
             <p className="text-xs text-zinc-400">
-              Your repository must contain a valid <code>bob-package.json</code> manifest at its root.
+              Your repository must contain a valid <code>bob-package.json</code> manifest at its root or within a declared subdirectory path.
             </p>
           </CardHeader>
 
@@ -252,7 +243,10 @@ export default function PublishPage() {
                 }}
               />
               <span className="text-[11px] text-zinc-500">
-                Format: <code>https://github.com/{authenticatedUsername}/[repository-name]</code>
+                Accepted formats:{" "}
+                <code>https://github.com/{authenticatedUsername}/repo</code>
+                {" "}or{" "}
+                <code>https://github.com/{authenticatedUsername}/repo/tree/main/subdirectory</code>
               </span>
             </div>
 

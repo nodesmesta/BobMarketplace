@@ -2,24 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { supabaseAdmin } from "@/lib/supabase/supabaseAdmin";
 import { parseAndValidateManifest } from "@/lib/gateway/manifestEngine";
+import { parseGithubUrl } from "@/lib/github/parseGithubUrl";
 import * as tar from "tar";
 import { Readable } from "stream";
-
-/**
- * Helper to parse GitHub repo URL into owner and repo name.
- * e.g. https://github.com/owner/repo -> { owner: "owner", repo: "repo" }
- */
-function parseGithubUrl(repoUrl: string): { owner: string; repo: string } | null {
-  try {
-    const parsed = new URL(repoUrl);
-    if (!parsed.hostname.includes("github.com")) return null;
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    if (parts.length < 2) return null;
-    return { owner: parts[0], repo: parts[1].replace(/\.git$/, "") };
-  } catch {
-    return null;
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,12 +18,16 @@ export async function POST(request: NextRequest) {
     const githubParsed = parseGithubUrl(repoUrl);
     if (!githubParsed) {
       return NextResponse.json(
-        { success: false, error: "Invalid GitHub repository URL. Must be in format https://github.com/owner/repo" },
+        {
+          success: false,
+          error:
+            "Invalid GitHub repository URL. Accepted formats: https://github.com/owner/repo or https://github.com/owner/repo/tree/branch/subdirectory",
+        },
         { status: 400 }
       );
     }
 
-    const { owner, repo } = githubParsed;
+    const { owner, repo, subPath } = githubParsed;
 
     // 0. Authenticate caller via Supabase Session Cookie or Bearer Token
     const supabase = createServerClient(
@@ -138,24 +127,44 @@ export async function POST(request: NextRequest) {
     const stream = Readable.from(tarballBuffer);
     const parser = new tar.Parser();
 
+    // Normalise the subPath prefix used to strip tarball entry paths.
+    // e.g. subPath "examples/sample-extension" becomes "examples/sample-extension/"
+    const subPathPrefix = subPath ? (subPath.endsWith("/") ? subPath : subPath + "/") : "";
+
     await new Promise<void>((resolve, reject) => {
       parser.on("entry", (entry: any) => {
-        // GitHub tarballs have a root directory like owner-repo-sha/
+        // GitHub tarballs wrap everything under a root dir: "owner-repo-<sha>/"
+        // Strip that first level to get the repo-relative path.
         const rawPath = entry.path;
-        const normalizedPath = rawPath.substring(rawPath.indexOf("/") + 1);
+        let normalizedPath = rawPath.substring(rawPath.indexOf("/") + 1);
+
+        // If a subdirectory was specified, only process files inside it.
+        // Files outside the subdirectory are skipped entirely.
+        if (subPathPrefix) {
+          if (!normalizedPath.startsWith(subPathPrefix)) {
+            entry.resume();
+            return;
+          }
+          // Strip the subdirectory prefix so paths are relative to that directory root.
+          normalizedPath = normalizedPath.substring(subPathPrefix.length);
+        }
+
+        // Skip directory entries and empty paths produced after stripping.
+        if (!normalizedPath || entry.type !== "File") {
+          entry.resume();
+          return;
+        }
 
         const chunks: Buffer[] = [];
         entry.on("data", (chunk: Buffer) => chunks.push(chunk));
         entry.on("end", () => {
           const fileData = Buffer.concat(chunks);
-          if (entry.type === "File") {
-            extractedFiles.set(normalizedPath, fileData);
+          extractedFiles.set(normalizedPath, fileData);
 
-            if (normalizedPath === "bob-package.json") {
-              manifestBuffer = fileData;
-            } else if (normalizedPath.toLowerCase() === "readme.md") {
-              readmeBuffer = fileData;
-            }
+          if (normalizedPath === "bob-package.json") {
+            manifestBuffer = fileData;
+          } else if (normalizedPath.toLowerCase() === "readme.md") {
+            readmeBuffer = fileData;
           }
         });
       });
