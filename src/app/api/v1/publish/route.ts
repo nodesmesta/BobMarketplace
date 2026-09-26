@@ -268,6 +268,7 @@ export async function POST(request: NextRequest) {
         path: f.name,
         size: f.data.length,
         mode: 0o644,
+        type: "File",
       }));
       packStream.add(entry);
       entry.write(f.data);
