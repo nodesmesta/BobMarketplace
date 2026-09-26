@@ -1,0 +1,45 @@
+{
+  "name": "ibmbob",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroui/react": "^3.2.6",
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "@nextui-org/react": "^2.6.11",
+    "@nextui-org/theme": "^2.4.5",
+    "@react-aria/ssr": "^3.10.1",
+    "@react-aria/utils": "^3.34.1",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.49.1",
+    "@tabler/icons-react": "^3.48.0",
+    "framer-motion": "^11.18.2",
+    "lucide-react": "^1.48.0",
+    "next": "^14.2.23",
+    "pako": "^2.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "tar": "^7.4.3",
+    "yaml": "^2.9.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/pako": "^2.0.3",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/tar": "^6.1.13",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.28.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
+  }
+}
