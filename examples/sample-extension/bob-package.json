@@ -1,0 +1,25 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "display_name": "Local Codebase Explainer",
+  "description": "An intelligent skill that autonomously inspects, analyzes, and explains the architecture and structure of the active workspace.",
+  "author": "nodesemesta",
+  "license": "MIT",
+  "type": "skill",
+  "files": [
+    {
+      "src": "skills/sample/SKILL.md",
+      "dest": ".bob/skills/sample/SKILL.md",
+      "type": "skill"
+    }
+  ],
+  "permissions": [
+    "read_workspace"
+  ],
+  "keywords": [
+    "onboarding",
+    "codebase-explainer",
+    "architecture",
+    "developer-tooling"
+  ]
+}
