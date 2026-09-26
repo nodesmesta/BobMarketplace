@@ -1,0 +1,20 @@
+{
+  "name": "bob-marketplace",
+  "version": "1.0.0",
+  "description": "Zero-friction CLI and Package Manager for IBM Bob 2.0 AI extensions",
+  "main": "bin/bob-marketplace.js",
+  "bin": {
+    "bob-marketplace": "./bin/bob-marketplace.js"
+  },
+  "keywords": [
+    "ibm-bob",
+    "marketplace",
+    "mcp",
+    "ai-extensions"
+  ],
+  "author": "nodesemesta",
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.7.0"
+  }
+}
