@@ -2,7 +2,7 @@
 
 > **The Decentralized Package Manager & Web Registry for IBM Bob 2.0 AI Extensions**
 
-[![Live Web Registry](https://img.shields.io/badge/Live%20Portal-ibmbob.vercel.app-0F62FE?style=for-the-badge&logo=vercel&logoColor=white)](https://ibmbob.vercel.app)
+[![Live Web Registry](https://img.shields.io/badge/Live%20Portal-bob.nodesemesta.com-0F62FE?style=for-the-badge&logo=vercel&logoColor=white)](https://bob.nodesemesta.com)
 [![IBM Bob 2.0](https://img.shields.io/badge/Platform-IBM%20Bob%202.0-8A3FFC?style=for-the-badge&logo=ibm&logoColor=white)](https://ibm.com)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14%20App%20Router-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20Postgres%20%26%20Storage-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
@@ -22,7 +22,7 @@ With Bob Marketplace, developers can install, manage, inspect, and remove autono
 
 - **Zero-Friction One-Line Setup**: Run `npx bob-marketplace init` once to automatically configure IBM Bob global mode files (`~/.bob/settings/custom_modes.yaml`) and MCP tool servers (`~/.bob/settings/mcp.json`).
 - **Native In-IDE Chat Commands**: Manage extensions right from the chat panel using `@marketplace add <name>`, `@marketplace list`, and `@marketplace remove <name>`.
-- **Public Discovery Web Registry ([ibmbob.vercel.app](https://ibmbob.vercel.app))**: Search and filter extensions across 8 taxonomy categories with live GitHub repository stars and fork counts.
+- **Public Discovery Web Registry ([bob.nodesemesta.com](https://bob.nodesemesta.com))**: Search and filter extensions across 8 taxonomy categories with live GitHub repository stars and fork counts.
 - **Publisher Workspace & Ownership Verification**: GitHub OAuth integration with strict ownership guards—developers can only publish and update repositories belonging to their authenticated GitHub account.
 - **One-Click Release Updates**: The publisher dashboard automatically detects when a new version is pushed to GitHub, allowing one-click publishing of new releases directly to Supabase PostgreSQL and Storage CDN.
 - **Community Issue Tracking**: Real-time GitHub issues integration on the publisher dashboard to monitor user feedback, bug reports, and feature requests.
@@ -47,7 +47,7 @@ graph TD
     end
 
     subgraph "Cloud Registry Gateway (Next.js 14 on Vercel)"
-        Web["Web Portal (ibmbob.vercel.app)"]
+        Web["Web Portal (bob.nodesemesta.com)"]
         API["Registry Gateway API (/api/v1)"]
         AuthMiddleware["Edge Auth & Ownership Guard"]
     end
@@ -144,8 +144,8 @@ Add a `bob-package.json` manifest at the root of your GitHub repository:
 ```
 
 ### Step 2: Publish via Web Portal
-1. Visit [ibmbob.vercel.app/login](https://ibmbob.vercel.app/login) and sign in with GitHub.
-2. Navigate to [Publish Package](https://ibmbob.vercel.app/publish).
+1. Visit [bob.nodesemesta.com/login](https://bob.nodesemesta.com/login) and sign in with GitHub.
+2. Navigate to [Publish Package](https://bob.nodesemesta.com/publish).
 3. Paste your public GitHub repository URL (e.g., `https://github.com/your-username/your-repo`).
 4. Click **Inspect Repository** &rarr; **Publish to Marketplace**.
 5. Your package is instantly packaged, uploaded to the Supabase Storage CDN, and available for `@marketplace add` globally!
@@ -153,7 +153,7 @@ Add a `bob-package.json` manifest at the root of your GitHub repository:
 ### Step 3: Releasing Updates (Automated Version Detection)
 When you update your package:
 1. Bump the `"version"` field in your repository's `bob-package.json` and push to GitHub.
-2. Open your [Publisher Dashboard](https://ibmbob.vercel.app/dashboard) and click **Manage**.
+2. Open your [Publisher Dashboard](https://bob.nodesemesta.com/dashboard) and click **Manage**.
 3. The dashboard detects the new version from GitHub automatically.
 4. Click **Release Update**—the new release is packaged and deployed in one click.
 
@@ -223,7 +223,7 @@ BobMarketplace/
 
 ## 10. Links & Resources
 
-- **Production Registry**: [https://ibmbob.vercel.app](https://ibmbob.vercel.app)
+- **Production Registry**: [https://bob.nodesemesta.com](https://bob.nodesemesta.com)
 - **GitHub Repository**: [https://github.com/nodesmesta/BobMarketplace](https://github.com/nodesmesta/BobMarketplace)
 - **IBM Bob 2.0**: [IBM Developer Platform](https://ibm.com)
 - **LabLab.ai Submission**: [IBM Bob 2.0 Hackathon](https://lablab.ai)
