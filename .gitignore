@@ -1,6 +1,6 @@
 # Hackathon Task Management & Internal Working Data
-task/
-data/
+/task/
+/data/
 
 # Environment Variables & Secrets
 .env
@@ -17,7 +17,6 @@ packages/cli/server/
 *.tsbuildinfo
 
 # Testing & Local Runtime Sessions
-bob_sessions/
 *.tar.gz
 
 # Logs & Temporary Files

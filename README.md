@@ -180,6 +180,11 @@ Bob Marketplace supports 8 specialized extension types tailored for IBM Bob 2.0:
 
 ```text
 BobMarketplace/
+├── bob_sessions/                      # IBM Bob IDE session verification & evidence
+│   ├── README.md                      # Verification walkthrough & compliance matrix
+│   ├── task/                          # Modular engineering task specifications (A to G)
+│   └── data/                          # High-resolution IDE session captures
+│
 ├── src/                               # Web Registry & Gateway Portal (Next.js 14)
 │   ├── app/                           # App Router (Marketplace, Auth, Dashboard, REST API)
 │   │   ├── (marketplace)/             # Public catalog, search, package detail views
@@ -221,7 +226,23 @@ BobMarketplace/
 
 ---
 
-## 10. Links & Resources
+## 10. IBM Bob IDE Verification & Evaluation Evidence
+
+Bob Marketplace was developed and validated natively within the official **IBM Bob IDE** Linux amd64 environment in strict compliance with all IBM Bob 2.0 Hackathon evaluation criteria.
+
+Comprehensive documentation, empirical evidence, and high-resolution session captures detailing the autonomous development and runtime execution lifecycle are available in the dedicated verification directory:
+
+- **[IBM Bob Task Session Verification & Evidence Report](bob_sessions/README.md)**:
+  - **Architectural Blueprint Planning**: Master blueprint synthesis conducted inside IBM Bob IDE (`plan.png`).
+  - **Modular Engineering Breakdown**: Complete technical specifications and recorded execution states across seven distinct modules (`taskA` through `taskG`).
+  - **Global CLI Setup**: Automated configuration of `~/.bob/settings/mcp.json` and `custom_modes.yaml` (`installation.png`).
+  - **Conversational Installation**: In-IDE chat execution via `@marketplace add sample` (`successaddpkg.png`).
+  - **Autonomous Skill Invocation**: Native slash command execution `/sample run` and automated repository analysis synthesis (`sampleRun.png` & `sampleRunDetailed.png`).
+  - **Hackathon Evaluation Matrix**: Verification table fulfilling 100% of official IBM jury criteria.
+
+---
+
+## 11. Links & Resources
 
 - **Production Registry**: [https://bob.nodesemesta.com](https://bob.nodesemesta.com)
 - **GitHub Repository**: [https://github.com/nodesmesta/BobMarketplace](https://github.com/nodesmesta/BobMarketplace)
@@ -230,6 +251,6 @@ BobMarketplace/
 
 ---
 
-## 11. License
+## 12. License
 
 This project is licensed under the [MIT License](LICENSE).
